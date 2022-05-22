@@ -1,0 +1,14 @@
+{
+  "name": "com.umbrason.scriptableobjectlibraries",
+  "version": "1.0.0",
+  "displayName": "ScriptableObject Libraries",
+  "description": "The 'ScriptableObject Libraries' package contains a framework storing references in a serialized type keyed dictionary",
+  "keywords": [
+  ],
+  "author": {
+    "name": "Umbrason"
+  },
+  "hideInEditor": false,
+  "dependencies": {
+  }
+}
