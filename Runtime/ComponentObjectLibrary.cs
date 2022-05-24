@@ -3,12 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ComponentObjectLibrary<KeyBaseClass, Value> : ScriptableObject, ISerializationCallbackReceiver where KeyBaseClass : MonoBehaviour where Value : UnityEngine.Object
+public abstract class ComponentObjectLibrary<KeyBaseClass, Value> : ScriptableObject, ISerializationCallbackReceiver where KeyBaseClass : MonoBehaviour where Value : UnityEngine.Object
 {
-    [SerializeField] public string[] _keys;
-    [SerializeField] public Value[] _values;
+    public static ComponentObjectLibrary<KeyBaseClass, Value> m_instance;
+    public static ComponentObjectLibrary<KeyBaseClass, Value> Instance
+    {
+        get
+        {
+            if (m_instance) return m_instance;            
+            var occurences = Resources.FindObjectsOfTypeAll<ComponentObjectLibrary<KeyBaseClass, Value>>();
+            if (occurences.Length > 1)
+                Debug.LogWarning($"more than one library of the requested type <{typeof(KeyBaseClass).Name}, {typeof(Value).Name}> was found!\n Remove duplicate library types to prevent unexpected behaviour.");
+            if (occurences.Length == 0)
+                Debug.LogError($"no library of the requested type <{typeof(KeyBaseClass).Name}, {typeof(Value).Name}> was found!\n Add one to any resource folder.");
+            return m_instance ??= occurences.FirstOrDefault();
+        }
+    }
 
-    public Dictionary<Type, Value> componentObjects;
+
+    [SerializeField] private string[] _keys;
+    [SerializeField] private Value[] _values;
+
+    public Dictionary<Type, Value> componentObjects = new Dictionary<Type, Value>();
     public Value this[Type t]
     {
         get
