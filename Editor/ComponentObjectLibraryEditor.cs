@@ -21,7 +21,7 @@ public abstract class ComponentObjectLibraryEditor<Key, Value> : UnityEditor.Edi
             return;
 
         foreach (var type in derivedTypes)
-            library[type] = EditorGUILayout.ObjectField(type.Name, library[type], typeof(Key), allowSceneObjects: false) as Value;
+            library[type] = EditorGUILayout.ObjectField(type.Name, library[type], typeof(Value), allowSceneObjects: false) as Value;
         if (GUI.changed)
             EditorUtility.SetDirty(library);
 
