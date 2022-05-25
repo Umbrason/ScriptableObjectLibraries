@@ -16,7 +16,7 @@ public abstract class ComponentObjectLibraryEditor<Key, Value> : UnityEditor.Edi
     {
         if (library == null)
             return;
-        var derivedTypes = System.AppDomain.CurrentDomain.GetAssemblies().SelectMany(x=>x.GetTypes()).Distinct().Where((t) => (!t.IsAbstract) && (!t.IsGenericType) && t.IsSubclassOf(typeof(Key))).ToArray();        
+        var derivedTypes = System.AppDomain.CurrentDomain.GetAssemblies().SelectMany(x=>x.GetTypes()).Where((t) => (!t.IsAbstract) && (!t.IsGenericType) && t.IsSubclassOf(typeof(Key))).Distinct().ToArray();
         derivedTypes.OrderBy(x => x.Name);
         foreach (var type in derivedTypes)
             library[type] = EditorGUILayout.ObjectField(type.Name, library[type], typeof(Key), allowSceneObjects: false) as Value;
