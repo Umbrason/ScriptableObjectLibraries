@@ -5,12 +5,12 @@ using UnityEngine;
 
 public abstract class ComponentObjectLibraryEditor<Key, Value> : UnityEditor.Editor where Key : MonoBehaviour where Value : UnityEngine.Object
 {
-    private ComponentObjectLibrary<Key, Value> library;
+    private TypeObjectLibrary<Key, Value> library;
     private Type[] derivedTypes;
 
     void OnEnable()
     {
-        library = target as ComponentObjectLibrary<Key, Value>;
+        library = target as TypeObjectLibrary<Key, Value>;
         derivedTypes = System.AppDomain.CurrentDomain.GetAssemblies().SelectMany(x=>x.GetTypes()).Where((t) => (!t.IsAbstract) && (!t.IsGenericType) && t.IsSubclassOf(typeof(Key))).Distinct().ToArray();
         derivedTypes.OrderBy(x => x.Name);
     }

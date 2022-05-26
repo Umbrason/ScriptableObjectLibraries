@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class ComponentObjectLibrary<KeyBaseClass, Value> : ScriptableObject, ISerializationCallbackReceiver where KeyBaseClass : MonoBehaviour where Value : UnityEngine.Object
+public abstract class TypeObjectLibrary<KeyBaseClass, Value> : ScriptableObject, ISerializationCallbackReceiver where Value : UnityEngine.Object
 {
-    public static ComponentObjectLibrary<KeyBaseClass, Value> m_instance;
-    public static ComponentObjectLibrary<KeyBaseClass, Value> Instance
+    public static TypeObjectLibrary<KeyBaseClass, Value> m_instance;
+    public static TypeObjectLibrary<KeyBaseClass, Value> Instance
     {
         get
         {
             if (m_instance) return m_instance;            
-            var occurences = Resources.FindObjectsOfTypeAll<ComponentObjectLibrary<KeyBaseClass, Value>>();
+            var occurences = Resources.FindObjectsOfTypeAll<TypeObjectLibrary<KeyBaseClass, Value>>();
             if (occurences.Length > 1)
                 Debug.LogWarning($"more than one library of the requested type <{typeof(KeyBaseClass).Name}, {typeof(Value).Name}> was found!\n Remove duplicate library types to prevent unexpected behaviour.");
             if (occurences.Length == 0)
