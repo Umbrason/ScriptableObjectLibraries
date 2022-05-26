@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public abstract class ComponentObjectLibraryEditor<Key, Value> : UnityEditor.Editor where Key : MonoBehaviour where Value : UnityEngine.Object
+public abstract class TypeObjectLibraryEditor<Key, Value> : UnityEditor.Editor where Value : UnityEngine.Object
 {
     private TypeObjectLibrary<Key, Value> library;
     private Type[] derivedTypes;
