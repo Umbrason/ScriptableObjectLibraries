@@ -11,7 +11,10 @@ public abstract class TypeObjectLibraryEditor<Key, Value> : UnityEditor.Editor w
     void OnEnable()
     {
         library = target as TypeObjectLibrary<Key, Value>;
-        derivedTypes = System.AppDomain.CurrentDomain.GetAssemblies().SelectMany(x=>x.GetTypes()).Where((t) => (!t.IsAbstract) && (!t.IsGenericType) && t.IsSubclassOf(typeof(Key))).Distinct().ToArray();
+        var assemblies = System.AppDomain.CurrentDomain.GetAssemblies().ToArray();
+        var types = assemblies.SelectMany(x => x.GetTypes()).ToArray();        
+        var subtypes = types.Where((t) => (!t.IsAbstract) && (!t.IsGenericType) && t.IsSubclassOf(typeof(Key))).ToArray();        
+        derivedTypes = subtypes;
         derivedTypes.OrderBy(x => x.Name);
     }
 
