@@ -5,7 +5,7 @@ using UnityEngine;
 
 public abstract class TypeObjectLibraryEditor<Key, Value> : UnityEditor.Editor where Value : UnityEngine.Object
 {
-    readonly string[] IGNORED_ASSEMBLY_PREFIXES = {
+    static readonly string[] IGNORED_ASSEMBLY_PREFIXES = {
         "UNITYEDITOR",
         "UNITYENGINE",
         "UNITY",
@@ -19,10 +19,11 @@ public abstract class TypeObjectLibraryEditor<Key, Value> : UnityEditor.Editor w
     void OnEnable()
     {
         library = target as TypeObjectLibrary<Key, Value>;
-        var assemblies = System.AppDomain.CurrentDomain.GetAssemblies().Where(assembly => !IGNORED_ASSEMBLY_PREFIXES.Any(prefix => assembly.FullName.ToLower().StartsWith(prefix.ToLower()))).ToArray();
-        var types = assemblies.SelectMany(x => x.GetTypes()).ToArray();
-        var subtypes = types.Where((t) => (!t.IsAbstract) && (!t.IsGenericType) && t.IsSubclassOf(typeof(Key))).ToArray();
-        derivedTypes = subtypes;
+        derivedTypes = System.AppDomain.CurrentDomain.GetAssemblies()
+        .Where(assembly => !IGNORED_ASSEMBLY_PREFIXES.Any(prefix => assembly.FullName.ToLower().StartsWith(prefix.ToLower())))
+        .SelectMany(x => x.GetTypes())
+        .Where((t) => (!t.IsAbstract) && (!t.IsGenericType) && t.IsSubclassOf(typeof(Key)))
+        .ToArray();        
         derivedTypes.OrderBy(x => x.Name);
     }
 
