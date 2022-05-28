@@ -5,15 +5,23 @@ using UnityEngine;
 
 public abstract class TypeObjectLibraryEditor<Key, Value> : UnityEditor.Editor where Value : UnityEngine.Object
 {
+    const string[] IGNORED_ASSEMBLY_PREFIXES = {
+        "UNITYEDITOR",
+        "UNITYENGINE",
+        "UNITY",
+        "SYSTEM",
+        "MSCORLIB"
+    };
+
     private TypeObjectLibrary<Key, Value> library;
     private Type[] derivedTypes;
 
     void OnEnable()
     {
         library = target as TypeObjectLibrary<Key, Value>;
-        var assemblies = System.AppDomain.CurrentDomain.GetAssemblies().ToArray();
-        var types = assemblies.SelectMany(x => x.GetTypes()).ToArray();        
-        var subtypes = types.Where((t) => (!t.IsAbstract) && (!t.IsGenericType) && t.IsSubclassOf(typeof(Key))).ToArray();        
+        var assemblies = System.AppDomain.CurrentDomain.GetAssemblies().Where(assembly => !IGNORED_ASSEMBLY_PREFIXES.Any(prefix => assembly.FullName.ToLower().StartsWith(prefix.ToLower()))).ToArray();
+        var types = assemblies.SelectMany(x => x.GetTypes()).ToArray();
+        var subtypes = types.Where((t) => (!t.IsAbstract) && (!t.IsGenericType) && t.IsSubclassOf(typeof(Key))).ToArray();
         derivedTypes = subtypes;
         derivedTypes.OrderBy(x => x.Name);
     }
