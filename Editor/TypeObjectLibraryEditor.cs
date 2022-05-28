@@ -5,7 +5,7 @@ using UnityEngine;
 
 public abstract class TypeObjectLibraryEditor<Key, Value> : UnityEditor.Editor where Value : UnityEngine.Object
 {
-    const string[] IGNORED_ASSEMBLY_PREFIXES = {
+    readonly string[] IGNORED_ASSEMBLY_PREFIXES = {
         "UNITYEDITOR",
         "UNITYENGINE",
         "UNITY",
