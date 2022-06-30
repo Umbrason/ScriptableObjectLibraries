@@ -23,9 +23,12 @@ public abstract class TypeObjectLibraryEditor<Key, Value> : UnityEditor.Editor w
         .Where(assembly => !IGNORED_ASSEMBLY_PREFIXES.Any(prefix => assembly.FullName.StartsWith(prefix)))
         .SelectMany(x => x.GetTypes())
         .Where((t) => (!t.IsAbstract) && (!t.IsGenericType) && t.IsSubclassOf(typeof(Key)))
+        .Where(IsValidType)
         .ToArray();        
         derivedTypes.OrderBy(x => x.Name);
     }
+
+    public virtual bool IsValidType(Type type) => true;
 
     public override void OnInspectorGUI()
     {
@@ -37,5 +40,5 @@ public abstract class TypeObjectLibraryEditor<Key, Value> : UnityEditor.Editor w
         if (GUI.changed)
             EditorUtility.SetDirty(library);
 
-    }
+    }    
 }

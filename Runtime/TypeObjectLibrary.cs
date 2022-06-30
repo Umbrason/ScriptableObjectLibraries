@@ -10,8 +10,8 @@ public abstract class TypeObjectLibrary<KeyBaseClass, Value> : ScriptableObject,
     {
         get
         {
-            if (m_instance) return m_instance;            
-            var occurences = Resources.FindObjectsOfTypeAll<TypeObjectLibrary<KeyBaseClass, Value>>();
+            if (m_instance) return m_instance;
+            var occurences = Resources.LoadAll<TypeObjectLibrary<KeyBaseClass, Value>>("");
             if (occurences.Length > 1)
                 Debug.LogWarning($"more than one library of the requested type <{typeof(KeyBaseClass).Name}, {typeof(Value).Name}> was found!\n Remove duplicate library types to prevent unexpected behaviour.");
             if (occurences.Length == 0)
@@ -43,7 +43,8 @@ public abstract class TypeObjectLibrary<KeyBaseClass, Value> : ScriptableObject,
         componentObjects = new Dictionary<Type, Value>();
         if (_keys != null && _values != null)
             for (int i = 0; i < Mathf.Min(_keys.Length, _values.Length); i++)
-                componentObjects.Add(Type.GetType(_keys[i]), _values[i]);
+                if (_keys[i] != null&& _values[i])
+                    componentObjects.Add(Type.GetType(_keys[i]), _values[i]);
     }
 
     public void OnBeforeSerialize()
@@ -51,5 +52,5 @@ public abstract class TypeObjectLibrary<KeyBaseClass, Value> : ScriptableObject,
         var keyTypes = componentObjects.Keys.ToArray();
         _keys = componentObjects.Keys.Select(t => $"{t.AssemblyQualifiedName}|{t.Assembly.FullName}").ToArray();
         _values = keyTypes.Select(key => componentObjects[key]).ToArray();
-    }
+    }    
 }
