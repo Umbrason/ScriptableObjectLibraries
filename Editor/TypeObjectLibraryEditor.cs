@@ -20,10 +20,10 @@ public abstract class TypeObjectLibraryEditor<Key, Value> : UnityEditor.Editor w
     {
         if (library == null)
             return;
-
+        EditorGUI.BeginChangeCheck();
         foreach (var type in derivedTypes)
             library[type] = EditorGUILayout.ObjectField(type.Name, library[type], typeof(Value), allowSceneObjects: false) as Value;
-        if (GUI.changed)
+        if (EditorGUI.EndChangeCheck())        
             EditorUtility.SetDirty(library);
 
     }    
