@@ -5,27 +5,13 @@ using UnityEngine;
 
 public abstract class TypeObjectLibraryEditor<Key, Value> : UnityEditor.Editor where Value : UnityEngine.Object
 {
-    static readonly string[] IGNORED_ASSEMBLY_PREFIXES = {
-        "UnityEditor",
-        "UnityEngine",
-        "Unity",
-        "System",
-        "mscorlib"
-    };
-
     private TypeObjectLibrary<Key, Value> library;
     private Type[] derivedTypes;
 
     void OnEnable()
     {
         library = target as TypeObjectLibrary<Key, Value>;
-        derivedTypes = System.AppDomain.CurrentDomain.GetAssemblies()
-        .Where(assembly => !IGNORED_ASSEMBLY_PREFIXES.Any(prefix => assembly.FullName.StartsWith(prefix)))
-        .SelectMany(x => x.GetTypes())
-        .Where((t) => (!t.IsAbstract) && (!t.IsGenericType) && t.IsSubclassOf(typeof(Key)))
-        .Where(IsValidType)
-        .ToArray();        
-        derivedTypes.OrderBy(x => x.Name);
+        derivedTypes = TypeCache.GetTypesDerivedFrom<Key>().Where(t => !t.IsAbstract && !t.IsInterface).OrderBy(t => t.Name).ToArray();        
     }
 
     public virtual bool IsValidType(Type type) => true;
