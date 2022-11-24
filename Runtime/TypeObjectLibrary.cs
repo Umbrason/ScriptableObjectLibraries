@@ -33,8 +33,9 @@ public abstract class TypeObjectLibrary<KeyBaseClass, Value> : ScriptableObject,
         }
         set
         {
-            if (t.IsSubclassOf(typeof(KeyBaseClass)) && !t.IsGenericType && !t.IsAbstract)
+            if ((t.IsSubclassOf(typeof(KeyBaseClass)) || t.GetInterfaces().Contains(typeof(KeyBaseClass))) && !t.IsGenericType && !t.IsAbstract)
                 componentObjects[t] = value;
+            else Debug.Log(t.Name);
         }
     }
 
@@ -43,7 +44,7 @@ public abstract class TypeObjectLibrary<KeyBaseClass, Value> : ScriptableObject,
         componentObjects = new Dictionary<Type, Value>();
         if (_keys != null && _values != null)
             for (int i = 0; i < Mathf.Min(_keys.Length, _values.Length); i++)
-                if (_keys[i] != null&& _values[i])
+                if (_keys[i] != null)
                     componentObjects.Add(Type.GetType(_keys[i]), _values[i]);
     }
 
